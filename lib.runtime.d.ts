@@ -21,11 +21,11 @@ declare class Math {
 }
 
 declare class Time {
-        static hour(): number;
+        hour(): number;
 }
 
 declare class Meta {
-       currentUserTime: Time;
+       static currentUserTime: Time;
 }
 
 interface Array<T = any> {
