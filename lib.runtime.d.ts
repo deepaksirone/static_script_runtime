@@ -22,6 +22,7 @@ declare class Math {
 
 declare class Time {
         hour(): number;
+	day(): number;
 }
 
 declare class Meta {
