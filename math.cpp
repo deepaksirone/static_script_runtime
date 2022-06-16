@@ -1,7 +1,11 @@
 #include <cmath>
 
 #include "math.h"
+#if defined (__riscv)
+#include "machine_riscv.h"
+#else
 #include "machine.h"
+#endif
 
 LIBRARY_EXPORT double Math__abs(double number) {
     return std::abs(number);

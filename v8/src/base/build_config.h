@@ -47,6 +47,13 @@
 #else
 #define V8_HOST_ARCH_32_BIT 1
 #endif
+#elif defined(__riscv)
+#define V8_HOST_ARCH_RISCV 1
+#if __riscv_xlen == 64 
+#define V8_HOST_ARCH_64_BIT 1
+#else
+#define V8_HOST_ARCH_32_BIT 1
+#endif
 #else
 #error "Host architecture was not detected as supported by v8"
 #endif
@@ -78,7 +85,7 @@
 // environment as presented by the compiler.
 #if !V8_TARGET_ARCH_X64 && !V8_TARGET_ARCH_IA32 && !V8_TARGET_ARCH_ARM &&      \
     !V8_TARGET_ARCH_ARM64 && !V8_TARGET_ARCH_MIPS && !V8_TARGET_ARCH_MIPS64 && \
-    !V8_TARGET_ARCH_PPC && !V8_TARGET_ARCH_S390
+    !V8_TARGET_ARCH_PPC && !V8_TARGET_ARCH_S390 && !V8_TARGET_ARCH_RISCV
 #if defined(_M_X64) || defined(__x86_64__)
 #define V8_TARGET_ARCH_X64 1
 #elif defined(_M_IX86) || defined(__i386__)
@@ -93,6 +100,8 @@
 #define V8_TARGET_ARCH_MIPS 1
 #elif defined(_ARCH_PPC)
 #define V8_TARGET_ARCH_PPC 1
+#elif defined(__riscv)
+#define V8_TARGET_ARCH_RISCV 1
 #else
 #error Target architecture was not detected as supported by v8
 #endif
