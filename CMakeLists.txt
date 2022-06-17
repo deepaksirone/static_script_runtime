@@ -10,12 +10,15 @@ use_riscv_musl_toolchain(64)
 set(SOURCE_FILES
         helpers.cpp
         helpers.h
+	library.h
         jsvalue.h
         math.cpp
         math.h
         machine.cpp
         machine_riscv.h
 	machine.h
+	time.h
+	time.cpp
 	#v8/src/base/platform/mutex.cc
 	#v8/src/base/platform/time.cc
 	#v8/src/base/platform/semaphore.cc

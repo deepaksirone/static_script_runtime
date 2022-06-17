@@ -9,6 +9,7 @@
 #include <stdint.h>
 #include <sys/types.h>
 #include <string.h>
+#include <stdio.h>
 #include "syscall_keystone.h"
 
 /**
@@ -24,6 +25,7 @@ public:
 
 	double NextDouble() {
 	   uintptr_t ret = SYSCALL_0(SYSCALL_GENRAND_WORD);
+	   printf("Random: %llu\n", ret);
 	   uintptr_t exponent = ret % 1023;
 	   uintptr_t sign = 0;
 	   uintptr_t mantissa = ret >> 12;
