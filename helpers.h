@@ -9,5 +9,6 @@ LIBRARY_EXPORT const char* number2string(double number);
 LIBRARY_EXPORT void console_log(double number);
 LIBRARY_EXPORT void console_log(const char *str);
 LIBRARY_EXPORT void console_log(bool boolean);
+extern "C" LIBRARY_EXPORT void skip();
 
 #endif //HLVM_RUNTIME_HELPERS_H

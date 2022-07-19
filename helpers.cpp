@@ -25,3 +25,7 @@ LIBRARY_EXPORT void console_log(bool boolean) {
         puts("false");
     }
 }
+
+extern "C" LIBRARY_EXPORT void skip() {
+	return;
+}
