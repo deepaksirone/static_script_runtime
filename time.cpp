@@ -1,16 +1,43 @@
 #include "time.h"
+#include "syscall_keystone.h"
+#include <stdint.h>
 
+static int64_t get_unix_time() {
+	uint64_t epoch_seconds = SYSCALL_0(SYSCALL_GET_TIME);
+	return epoch_seconds;
+}
 
-LIBRARY_EXPORT double Time__hour() {
-	//TODO: unimplemented
-	return 10.0;
+LIBRARY_EXPORT double Time__hour() {	
+	time_t t = get_unix_time();
+	struct tm *time = gmtime((const time_t *)&t);
+
+	return (double)(time->tm_hour);
 }
 LIBRARY_EXPORT double Time__day() {
-	//TODO: unimplemented
-	return 11.0;
+	time_t t = get_unix_time();
+        struct tm *time = gmtime((const time_t *)&t);
+	
+	return (double)(time->tm_wday);
 }
 
 LIBRARY_EXPORT double Time__second() {
-	//TODO: unimplemented
-	return 15.0;
+	time_t t = get_unix_time();
+        struct tm *time = gmtime((const time_t *)&t);
+
+        return (double)(time->tm_sec);
 }
+
+LIBRARY_EXPORT double Time__month() {
+        time_t t = get_unix_time();
+        struct tm *time = gmtime((const time_t *)&t);
+
+        return (double)(time->tm_mon);
+}
+
+LIBRARY_EXPORT double Time__year() {
+        time_t t = get_unix_time();
+        struct tm *time = gmtime((const time_t *)&t);
+
+        return (double)(time->tm_year + 1900);
+}
+

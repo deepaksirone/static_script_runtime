@@ -23,6 +23,9 @@ declare class Math {
 declare class Time {
         hour(): number;
 	day(): number;
+	second(): number;
+	month(): number;
+	year(): number;
 }
 
 declare class Meta {
