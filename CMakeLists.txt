@@ -3,6 +3,7 @@ include(macros.cmake)
 project(hlvm-runtime)
 
 #include_directories("v8")
+include_directories(include)
 
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_STANDARD 14)
@@ -19,6 +20,10 @@ set(SOURCE_FILES
 	machine.h
 	time.h
 	time.cpp
+	rule_functions/fetch_trigger_data.cpp
+	rule_functions/fetch_trigger_data.h
+	rule_functions/rule_params.h
+	rule_functions/rule_api.cpp
 	#v8/src/base/platform/mutex.cc
 	#v8/src/base/platform/time.cc
 	#v8/src/base/platform/semaphore.cc
@@ -60,3 +65,4 @@ if (LINUX)
 endif()
 
 add_library(hlvm-runtime STATIC ${SOURCE_FILES})
+target_link_libraries(hlvm-runtime "-static" "-lstdc++")

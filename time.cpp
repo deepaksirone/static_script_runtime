@@ -2,7 +2,7 @@
 #include "syscall_keystone.h"
 #include <stdint.h>
 
-static int64_t get_unix_time() {
+static uint64_t get_unix_time() {
 	uint64_t epoch_seconds = SYSCALL_0(SYSCALL_GET_TIME);
 	return epoch_seconds;
 }
