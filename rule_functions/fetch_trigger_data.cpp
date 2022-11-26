@@ -38,7 +38,7 @@ C_LIBRARY_EXPORT int validate_and_init_trigger_data(int trig_id, char *trigger_d
 	Document json_schema;
 
 	if (trig_id >= MAX_TRIGGERS) {
-		return 0;
+		return -1;
 	}
 
 	printf("[Validate] The trigger data: %s\n", trigger_data);
@@ -46,30 +46,34 @@ C_LIBRARY_EXPORT int validate_and_init_trigger_data(int trig_id, char *trigger_d
 	if (json_schema.Parse(rule_params).HasParseError()) {
 		// Invalid Rule Params
 		printf("Invalid Rule Params: %s\n", rule_params);
-		return 0;
+		return -2;
 	}
 
 	if (trig_data.Parse(trigger_data).HasParseError()) {
-		return 0;
+		return -3;
 	}
 
 	if (!trig_data.HasMember("nonce") || !trig_data.HasMember("data")) {
-		return 0;
+		return -4;
 	}
 
 	Value& s = trig_data["nonce"];
 	uint64_t n = s.GetUint64();
-	if (nonce != n) {
-		printf("[Validate] Nonce validation failed\n");
-		return 0;
+
+	if (SYSCALL_1(SYSCALL_VERIFY_NONCE, n) == 0) {
+		printf("[Validate] Nonce verifiation failed!\n");
 	}
+	/*if (nonce != n) {
+		printf("[Validate] Nonce validation failed\n");
+		return -5;
+	}*/
 
 	Value& timest = trig_data["timestamp"];
 	uint64_t timestamp = timest.GetUint64();
 
 	if (!validate_timestamp(timestamp, timeout)) {
 		printf("[Validate] Timestamp validation failed\n");
-		return 0;
+		return -6;
 	}
 
 
@@ -79,20 +83,18 @@ C_LIBRARY_EXPORT int validate_and_init_trigger_data(int trig_id, char *trigger_d
 		Value::MemberIterator val = trig_data.FindMember(itr->name.GetString());
 		if (val == trig_data.MemberEnd()) {
 			printf("[Validate] Field not found\n");
-			return 0;
+			return -7;
 		}
 		
 		if (val->value != itr->value) {
 			printf("[Validate] Field not a match\n");
-			return 0;
+			return -8;
 		}
 	}
 
-	
-	
 	if (parsed_trigger_data[trig_id].Parse(trig_data["data"].GetString()).HasParseError()) {
 		printf("Failed to store parsed trigger data\n");
-		return 0;
+		return -9;
 	}
 	//parsed_trigger_data[trig_id] = trigger_data;
 
@@ -100,16 +102,59 @@ C_LIBRARY_EXPORT int validate_and_init_trigger_data(int trig_id, char *trigger_d
 
 }
 
-C_LIBRARY_EXPORT void format_action_data(char **action_data, int num_actions, char **ingredients, int* ingredients_to_trigger, int num_ingredients)
+// Assumes that there is just one trigger service and it is already parsed at parsed_trigger_data[0] 
+C_LIBRARY_EXPORT int format_action_data(char **action_data_json, int num_actions, char **ingredients, int num_ingredients)
 {
 	//TODO: Complete the formatting
-	char ingredient[100];
-	/*for (int i = 0; i < num_actions; i++) {
-		Document trigger_data;
-		for (int j = 0; j < num_ingredients; j++) {
-			strstr()
+	/*char ingredient[100];
+
+	for (int i = 0; i < num_actions; i++) {
+		for(int j = 0; j < num_ingredients; j++) {
+			snprintf(ingredient, 100, "{{%s}}", ingredients[j]);
+			
 		}
 	}*/
+
+	//Just loading the action data template for now
+	for (int i = 0; i < num_actions; i++) {
+		if (parsed_action_data[i].Parse(action_data_json[i]).HasParseError()) {
+			printf("Failed to store parsed action data: %d\n", i);
+			return -1;
+		}
+	}
+
+	return 0;
+
+}
+
+C_LIBRARY_EXPORT int *get_action_skip_vector()
+{
+	return (int *)&action_skipped;
+}
+
+C_LIBRARY_EXPORT char *get_action_data(int i, int32_t *size, char *action_params, int32_t action_param_sz) 
+{
+	Value s;
+	s.SetString(action_params, action_param_sz);
+	parsed_action_data[i].AddMember("action_service_params", s, parsed_action_data[i].GetAllocator());
+
+	uintptr_t nonce = SYSCALL_0(SYSCALL_GENRAND_WORD);
+	Value nonceval;
+	nonceval.SetUint64(nonce);
+	parsed_action_data[i].AddMember("action_service_nonce", nonceval, parsed_action_data[i].GetAllocator());
+
+	uint64_t timestamp = get_unix_time();
+	Value timestamp_val;
+	timestamp_val.SetUint64(timestamp);
+	parsed_action_data[i].AddMember("action_service_timestamp", timestamp_val, parsed_action_data[i].GetAllocator());
+
+	StringBuffer buffer;
+	buffer.Clear();
+	Writer<StringBuffer> writer(buffer);
+	parsed_action_data[i].Accept(writer);
+	*size = strlen(buffer.GetString());
+
+	return strdup(buffer.GetString());
 }
 
 C_LIBRARY_EXPORT void clear_data()

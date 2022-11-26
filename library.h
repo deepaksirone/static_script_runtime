@@ -8,4 +8,14 @@
 #define CRYPT_CODE_LIBRARY_EXPORT __attribute__((section(".secure_code"), visibility("default")))
 #define CRYPT_DATA __attribute__((section(".secure_data")))
 
+typedef struct moment {
+    int day;
+    int month;
+    int year;
+    int hour;
+    int minute;
+    int second;
+} moment_t;
+
+
 #endif //HLVM_RUNTIME_HELPERS_H

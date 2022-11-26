@@ -17,6 +17,7 @@
 #define SYSCALL_GENRAND 1005
 #define SYSCALL_GENRAND_WORD 1006
 #define SYSCALL_GET_TIME  1009
+#define SYSCALL_VERIFY_NONCE 1010
 
 #define SYSCALL(which, arg0, arg1, arg2, arg3, arg4)           \
   ({                                                           \

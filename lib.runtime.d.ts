@@ -26,10 +26,12 @@ declare class Time {
 	second(): number;
 	month(): number;
 	year(): number;
+	format(s: string): string;
 }
 
 declare class Meta {
        static currentUserTime: Time;
+       static triggerTime: Time;
 }
 
 interface Array<T = any> {
