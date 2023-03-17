@@ -21,7 +21,7 @@ static uint64_t get_unix_time() {
 static bool validate_timestamp(uint64_t timestamp, uint64_t timeout)
 {
 	uintptr_t current_timestamp = get_unix_time();
-	printf("Current timestamp: %lu, timestamp: %lu, timeout: %lu\n", current_timestamp, timestamp, timeout);
+	//printf("Current timestamp: %lu, timestamp: %lu, timeout: %lu\n", current_timestamp, timestamp, timeout);
 	if (current_timestamp > timestamp) {
 		return (current_timestamp - timestamp) < timeout;
 	}
@@ -41,7 +41,6 @@ C_LIBRARY_EXPORT int validate_and_init_trigger_data(int trig_id, char *trigger_d
 		return -1;
 	}
 
-	printf("[Validate] The trigger data: %s\n", trigger_data);
 
 	if (json_schema.Parse(rule_params).HasParseError()) {
 		// Invalid Rule Params

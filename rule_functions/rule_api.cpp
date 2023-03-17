@@ -21,7 +21,7 @@ C_LIBRARY_EXPORT char *Weather_tomorrowsForecastCallsFor_ConditionImageURL()
         return NULL;
     }*/
     
-    printf("[Rule API call] Weather_tomorrowsForecastCallsFor_ConditionImageURL: %s\n", (char *)parsed_trigger_data[0]["ConditionImageUrl"].GetString());
+    //printf("[Rule API call] Weather_tomorrowsForecastCallsFor_ConditionImageURL: %s\n", (char *)parsed_trigger_data[0]["ConditionImageUrl"].GetString());
     return (char *)parsed_trigger_data[0]["ConditionImageUrl"].GetString();
     //return (char *)"ConditionImageUrl: Data here\n";
 }

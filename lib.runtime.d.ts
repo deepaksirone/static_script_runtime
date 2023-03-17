@@ -21,12 +21,13 @@ declare class Math {
 }
 
 declare class Time {
-        hour(): number;
+    hour(): number;
 	day(): number;
 	second(): number;
 	month(): number;
 	year(): number;
 	format(s: string): string;
+    weekday(): number;
 }
 
 declare class Meta {
