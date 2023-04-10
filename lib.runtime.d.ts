@@ -24,6 +24,7 @@ declare class Time {
     hour(): number;
 	day(): number;
 	second(): number;
+    minute(): number;
 	month(): number;
 	year(): number;
 	format(s: string): string;

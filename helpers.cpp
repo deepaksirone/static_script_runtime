@@ -18,6 +18,10 @@ C_LIBRARY_EXPORT double parseInt(const char *str) {
     return ret;
 }
 
+C_LIBRARY_EXPORT double parseFloat(const char *str) {
+    return parseInt(str);
+}
+
 char *moment_worker(moment_t *moment) {
     char *res = (char *)malloc(101);
     snprintf(res, 100, "%d %d %d %d:%d:%d", moment->day, moment->month, moment->year, moment->hour, moment->minute, moment->second);
