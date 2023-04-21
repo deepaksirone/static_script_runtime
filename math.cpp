@@ -1,5 +1,6 @@
 #include <cmath>
 
+#include "library.h"
 #include "math.h"
 #if defined (__riscv)
 #include "machine_riscv.h"
@@ -27,8 +28,25 @@ LIBRARY_EXPORT double Math__round(double number) {
     return std::round(number);
 }
 
+C_LIBRARY_EXPORT double Math_floor(double number) {
+    return Math__floor(number);
+}
+
 LIBRARY_EXPORT double Math__random() {
     return Machine::Instance().getRandomNumberGenerator()->NextDouble();
+}
+
+C_LIBRARY_EXPORT double Math_random() {
+    return Math__random();
+}
+
+C_LIBRARY_EXPORT char *_Z15Number__toFixedd(double num, double fix) {
+    //TODO: Add support for more decimal places
+    char* result = (char *)malloc(20);
+
+    snprintf(result, 100, "%.1f", num);
+    return result;
+
 }
 
 struct TypedDoubleArray {

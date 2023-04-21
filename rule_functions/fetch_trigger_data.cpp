@@ -101,6 +101,76 @@ C_LIBRARY_EXPORT int validate_and_init_trigger_data(int trig_id, char *trigger_d
 
 }
 
+C_LIBRARY_EXPORT int init_trigger_data(int trig_id, char *trigger_data, uintptr_t nonce, char *trigger_url, int trigger_url_sz, char *rule_params, uint64_t timeout)
+{
+	//clear_data();
+	Document trig_data;
+	Document json_schema;
+
+	if (trig_id >= MAX_TRIGGERS) {
+		return -1;
+	}
+
+
+	if (json_schema.Parse(rule_params).HasParseError()) {
+		// Invalid Rule Params
+		printf("Invalid Rule Params: %s\n", rule_params);
+		return -2;
+	}
+
+	if (trig_data.Parse(trigger_data).HasParseError()) {
+		return -3;
+	}
+
+	if (!trig_data.HasMember("nonce") || !trig_data.HasMember("data")) {
+		return -4;
+	}
+
+	Value& s = trig_data["nonce"];
+	uint64_t n = s.GetUint64();
+
+	/*if (SYSCALL_1(SYSCALL_VERIFY_NONCE, n) == 0) {
+		printf("[Validate] Nonce verifiation failed!\n");
+	}*/
+	/*if (nonce != n) {
+		printf("[Validate] Nonce validation failed\n");
+		return -5;
+	}*/
+
+	/*Value& timest = trig_data["timestamp"];
+	uint64_t timestamp = timest.GetUint64();
+
+	if (!validate_timestamp(timestamp, timeout)) {
+		printf("[Validate] Timestamp validation failed\n");
+		return -6;
+	}*/
+
+
+	for (Value::MemberIterator itr = json_schema.MemberBegin(); itr != json_schema.MemberEnd(); ++itr) {
+
+		printf("[Validate] Checking for field: %s\n", itr->name.GetString());
+		Value::MemberIterator val = trig_data.FindMember(itr->name.GetString());
+		if (val == trig_data.MemberEnd()) {
+			printf("[Validate] Field not found\n");
+			return -7;
+		}
+		
+		if (val->value != itr->value) {
+			printf("[Validate] Field not a match\n");
+			return -8;
+		}
+	}
+
+	if (parsed_trigger_data[trig_id].Parse(trig_data["data"].GetString()).HasParseError()) {
+		printf("Failed to store parsed trigger data\n");
+		return -9;
+	}
+	//parsed_trigger_data[trig_id] = trigger_data;
+
+	return 1;
+
+}
+
 // Assumes that there is just one trigger service and it is already parsed at parsed_trigger_data[0] 
 C_LIBRARY_EXPORT int format_action_data(char **action_data_json, int num_actions, char **ingredients, int num_ingredients)
 {

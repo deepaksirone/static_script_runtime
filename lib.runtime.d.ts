@@ -28,6 +28,7 @@ declare class Time {
 	month(): number;
 	year(): number;
 	format(s: string): string;
+    format(): string;
     weekday(): number;
 }
 
