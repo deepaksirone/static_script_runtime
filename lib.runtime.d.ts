@@ -18,6 +18,7 @@ declare class Math {
     static pow(value: number, power: number): number;
     static random(): number;
     static abs(value: number): number;
+    static ceil(val: number): number;
 }
 
 declare class Time {
