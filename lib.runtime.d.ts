@@ -33,6 +33,7 @@ declare class Time {
     weekday(): number;
     locale(s: string): Time;
     isoWeekday(): number;
+    add(n: number, format: string): Time;
 }
 
 declare class Meta {
