@@ -8,10 +8,8 @@ declare function console_log(value: string): void;
 declare function console_log(value: boolean): void;
 
 // https://www.ecma-international.org/ecma-262/6.0/#sec-math-object
-declare class Math {
-    /**
-     * Returns the greatest integer less than or equal to its numeric argument.
-     */
+/*declare class Math {
+
     static floor(value: number): number;
     static round(value: number): number;
     static sqrt(value: number): number;
@@ -39,7 +37,7 @@ declare class Time {
 declare class Meta {
        static currentUserTime: Time;
        static triggerTime: Time;
-}
+}*/
 
 interface Array<T = any> {
     // push(member: number): number;
