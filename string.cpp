@@ -95,6 +95,18 @@ C_LIBRARY_EXPORT double __str_len(char *str) {
     return strlen(str);
 }
 
+C_LIBRARY_EXPORT double __str_array_len(char **array) {
+	double i = 0;
+	if (array == NULL) return 0;
+
+	for(int j = 0; array[j] != NULL; j++) {
+		i++;
+	}
+
+	return i;
+}
+  
+
 char* concat_array(char **array, int len) {
     int tot_len = 0;
     for (int i = 0; i < len; i++) {
